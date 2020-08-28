@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.guet.system.mapper.MenuMapper">
+    <resultMap id="getMenuAndChildMenuMap" type="Menu">
+        <id property="menuId" column="MENUID"/>
+        <result property="pId" column="PID"/>
+        <result property="menuName" column="MENUNAME"/>
+        <result property="url" column="URL"/>
+        <collection property="childMenus" column="MENUID" select="getChildMenuById"></collection>
+    </resultMap>
+    <select id="getChildMenuById" resultMap="getMenuAndChildMenuMap">
+        SELECT c.* FROM menus c,menus p WHERE c.pid=p.menuid AND p.menuid=#{id}
+    </select>
+    <select id="getMenuById" resultMap="getMenuAndChildMenuMap">
+        SELECT * FROM menus WHERE menuid in (SELECT menuid FROM role_menu WHERE roleid=#{roleid}) AND pid IS NULL
+    </select>
+
+    <select id="getAllMenus" resultMap="getMenuAndChildMenuMap">
+        SELECT * FROM menus WHERE pid IS NULL
+    </select>
+</mapper>
