@@ -1,6 +1,7 @@
 package cn.edu.guet.system.common.exception;
 
 import cn.edu.guet.system.exception.InsertException;
+import cn.edu.guet.system.exception.PermissionException;
 import cn.edu.guet.system.util.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
@@ -36,6 +37,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value= InsertException.class)
     public Result handler(InsertException e){
         log.error("插入异常..........{}",e);
+        return Result.fail(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value= PermissionException.class)
+    public Result handler(PermissionException e){
+        log.error("权限异常..........{}",e);
         return Result.fail(e.getMessage());
     }
 

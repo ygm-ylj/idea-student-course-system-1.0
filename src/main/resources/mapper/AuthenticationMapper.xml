@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.guet.system.mapper.AuthenticationMapper">
+    <resultMap id="roleMenuMap" type="Role">
+        <id property="roleId" column="ROLEID"/>
+    </resultMap>
+    <select id="identity" resultMap="roleMenuMap">
+        SELECT rm.roleid,m.menuid FROM role_menu rm,menus m WHERE rm.menuid=m.menuid AND rm.roleid=#{roleid} AND m.url=#{url}
+    </select>
+</mapper>
