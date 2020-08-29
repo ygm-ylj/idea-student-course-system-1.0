@@ -9,7 +9,6 @@ import cn.edu.guet.system.util.UserDto;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
