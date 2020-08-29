@@ -5,12 +5,14 @@ import cn.edu.guet.system.model.Major;
 import cn.edu.guet.system.model.Teacher;
 import cn.edu.guet.system.service.IACourseService;
 import cn.edu.guet.system.service.IUserService;
+import cn.edu.guet.system.service.impl.AuthenticationImpl;
 import cn.edu.guet.system.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -20,6 +22,8 @@ public class ACourseController {
     Result result=new Result();
     @Autowired
     IUserService userService;
+    @Autowired
+    AuthenticationImpl authentication;
     //获取全部课程
     @RequestMapping(value = "/getAllCourse",method = RequestMethod.GET)
     public Result getAllCourse(){
@@ -61,7 +65,8 @@ public class ACourseController {
 
     //添加课程
     @RequestMapping(value = "/addCourse",method = RequestMethod.POST)
-    public Result addCourse(String courseId,String courseName,String teacherId,String majorId) {
+    public Result addCourse(String courseId, String courseName, String teacherId, String majorId, HttpServletRequest request) {
+        authentication.getUsername(request,"AddCourse");
         Course addCourse = new Course();
         List allCourseId=courseService.getAllCourseId();
         List allTeacherId=userService.getAllTeacherId();
@@ -90,7 +95,8 @@ public class ACourseController {
 
     //删除课程
     @RequestMapping(value = "/aDeleteCourse",method = RequestMethod.GET)
-    public Result deleteCourse(String courseId){
+    public Result deleteCourse(String courseId,HttpServletRequest request){
+        authentication.getUsername(request,"FindCourse");
         System.out.println(courseId);
         try {
             courseService.deleteCourse(courseId);
