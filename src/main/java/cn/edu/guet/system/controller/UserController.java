@@ -5,17 +5,20 @@ import cn.edu.guet.system.model.School;
 import cn.edu.guet.system.model.Student;
 import cn.edu.guet.system.model.Teacher;
 import cn.edu.guet.system.service.IUserService;
+import cn.edu.guet.system.service.impl.AuthenticationImpl;
 import cn.edu.guet.system.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
 public class UserController {
-
+    @Autowired
+    AuthenticationImpl authentication;
     @Autowired
     IUserService userService;
     Result result=new Result();
@@ -77,7 +80,8 @@ public class UserController {
 
     //添加学生
     @RequestMapping(value = "/addStudent", method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    public Result addStudent(String classId, String studentId, String studentName){
+    public Result addStudent(String classId, String studentId, String studentName, HttpServletRequest request){
+        authentication.getUsername(request,"AddUser");
         System.out.println("1111111"+classId);
         Clazz clazz=userService.getClazzById(classId);
         Student stu=new Student();
@@ -103,14 +107,16 @@ public class UserController {
 
     //删除学生
     @RequestMapping(value = "/deleteStudent", method = RequestMethod.GET)
-    public Result deleteStudent(String id){
+    public Result deleteStudent(String id,HttpServletRequest request){
+        authentication.getUsername(request,"FindUser");
         userService.deleteStudent(id);
         return result.succ(200,"删除成功",null);
     }
 
     //添加老师
     @RequestMapping(value = "/addTeacher", method = RequestMethod.POST)
-    public Result addTeacher(String teacherId, String teacherName, String schoolId){
+    public Result addTeacher(String teacherId, String teacherName, String schoolId,HttpServletRequest request){
+        authentication.getUsername(request,"AddUser");
         Teacher teacher=new Teacher();
         School school=userService.getSchoolById(schoolId);
         teacher.setTeacherId(teacherId);
@@ -135,7 +141,8 @@ public class UserController {
 
     //删除老师
     @RequestMapping(value = "/deleteTeacher", method = RequestMethod.GET)
-    public Result deleteTeacher(String teacherId){
+    public Result deleteTeacher(String teacherId,HttpServletRequest request){
+        authentication.getUsername(request,"FindUser");
         if(teacherId==null){
             return result.fail("删除老师失败");
         }else{
