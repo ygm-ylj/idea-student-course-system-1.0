@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.guet.system.mapper.CourseMapper">
+
+    <resultMap id="stuCrouseMap" type="course">
+        <id column="courseid" property="courseId"/>
+        <result column="coursename" property="courseName"/>
+
+        <!--  N+1 -->
+        <!-- <association property="clazz" column="classid" javaType="clazz" select="cn.edu.guet.mapper.ClassMapper.getClazzById"/> -->
+        <!-- 执行连接查询（两个表连接） -->
+        <association property="teacher" column="teacherid">
+            <id column="teacherid" property="teacherId"/>
+            <result column="teachername" property="teacherName"/>
+        </association>
+    </resultMap>
+
+    <!--联合course_selection表、courses表、teacher表查出当前用户（studentId）的所有选课信息-->
+    <select id="getCourseById" resultMap="stuCrouseMap" parameterType="string">
+        select * from courses c,course_selection s,teachers t where c.courseid=s.courseid and c.teacherid=t.teacherid and studentId=#{value}
+    </select>
+
+    <!--利用前端传过来的当前用户(studentId)和选择退课的科目ID（coursseId）在选课表中删除该科目选课信息-->
+    <delete id="deleteCourse" parameterType="string">
+        delete from course_selection where studentId=#{studentId} and courseId=#{courseId}
+    </delete>
+
+</mapper>
