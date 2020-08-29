@@ -6,6 +6,6 @@ import java.util.List;
 
 
 public interface ICourseService {
-    List<Course> getCourse(String studentId);
+    List<Course> getCourse(String studentId);//獲取
     void deleteCourse(String studentId, String courseId) throws Exception;
 }

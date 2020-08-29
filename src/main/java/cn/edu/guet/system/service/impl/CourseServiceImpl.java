@@ -22,7 +22,7 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public void deleteCourse(String studentId, String courseId) throws Exception {
-        courseMapper.deleteCourse(studentId,courseId);//调用Mapper层deleteCourse函数并传入studentId和courseId
+        courseMapper.deleteCourse(studentId,courseId);//调用Mapper层deleteCourse函数并传入studentId和 courseId
     }
 }
 
