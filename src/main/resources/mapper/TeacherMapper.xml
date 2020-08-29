@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.guet.system.mapper.TeacherMapper">
+
+    <resultMap id="courseIdMap" type="course">
+        <id property="courseId" column="courseid"/>
+    </resultMap>
+    <resultMap id="teaSchoolMap" type="teacher">
+        <id column="teacherid" property="teacherId"/>
+        <result column="teachername" property="teacherName"/>
+        <association property="school" column="schoolid" javaType="school">
+            <id column="schoolid" property="schoolId"></id>
+            <result column="schoolname" property="schoolName"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="courseMap" type="course">
+        <id column="courseid" property="courseId"/>
+        <result column="coursename" property="courseName"/>
+        <association property="teacher" column="teacherid" javaType="teacher">
+            <id column="teacherid" property="teacherId"/>
+            <result property="teacherName" column="teachername"/>
+        </association>
+        <association property="major" column="majorid" javaType="major">
+            <id column="majorid" property="majorId"/>
+            <association property="school" column="schoolid" javaType="school">
+                <id column="schoolid" property="schoolId"/>
+                <result column="schoolname" property="schoolName"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <resultMap id="stuClazzMap" type="student">
+        <id column="studentid" property="studentId"/>
+        <result column="studentname" property="studentName"/>
+        <association property="clazz" column="classid" javaType="clazz">
+            <id column="classid" property="classId"/>
+            <result column="grade" property="grade"/>
+            <association column="major" property="major" javaType="major">
+                <id column="majorid" property="majorId"/>
+                <association property="school" column="school">
+                    <id column="schoolid" property="schoolId"/>
+                    <result column="schoolname" property="schoolName"/>
+                </association>
+            </association>
+        </association>
+    </resultMap>
+
+    <resultMap id="AllStudentIdMap" type="student">
+        <id column="studentid" property="studentId"/>
+    </resultMap>
+
+    <resultMap id="majorMap" type="major">
+        <id column="majorid" property="majorId"/>
+    </resultMap>
+
+    <select id="getAllCourseId" resultMap="courseIdMap">
+         SELECT courseid FROM courses
+     </select>
+
+    <select id="getTeacherById" resultMap="teaSchoolMap">
+        SELECT * FROM teachers t,schools s WHERE t.schoolid=s.schoolid
+         AND teacherid=#{value}
+    </select>
+
+    <select id="viewCourseByTeacherId" resultMap="courseMap">
+         SELECT c.courseid,c.coursename,t.teachername,m.majorid,s.schoolname FROM
+        courses c,teachers t,majors m, schools s WHERE
+        c.teacherid=t.teacherid AND c.majorid=m.majorid AND m.schoolid=s.schoolid AND c.teacherid=#{teacherId}
+    </select>
+
+    <insert id="addCourse" parameterType="course">
+        INSERT INTO courses VALUES(#{courseId},#{courseName}，#{teacher.teacherId}，#{major.majorId})
+    </insert>
+
+    <delete id="deleteCourse" parameterType="course">
+        DELETE FROM courses WHERE courseid=#{value}
+    </delete>
+
+    <select id="getMajorByMajorId" resultType="major">
+        SELECT * FROM majors WHERE majorid=#{value}
+    </select>
+
+    <select id="viewStudentBycourseId" resultMap="stuClazzMap">
+        SELECT st.studentid,st.studentname,c.classid,sc.schoolname FROM students st,classes c,majors m,schools sc
+        WHERE st.classid=c.classid And c.majorid=m.majorid And m.schoolid=sc.schoolid
+        AND st.studentid in (SELECT studentid from course_selection where courseid=#{courseId})
+    </select>
+
+    <select id="getAllStudentId" resultMap="AllStudentIdMap">
+        SELECT studentid FROM students
+    </select>
+
+    <select id="getAllMajorId" resultMap="majorMap">
+        SELECT majorid FROM majors
+    </select>
+
+    <delete id="deleteStudents" parameterType="String">
+        delete from course_selection where courseid=#{courseId} AND studentid=#{studentId}
+    </delete>
+
+    <insert id="addStudents" parameterType="String">
+        insert into course_selection values (#{courseId},#{studentId})
+    </insert>
+</mapper>
