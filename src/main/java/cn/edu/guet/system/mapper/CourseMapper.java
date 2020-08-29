@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface CourseMapper {
     List<Course> getCourseById(String studentId);//传入studentId,利用studentId查出已选课程
-    //传入当前用户的studentId和courseId
+    //传入当前用户的studentId和 courseId
     void deleteCourse(@Param("studentId") String studentId, @Param("courseId") String courseId);
 }

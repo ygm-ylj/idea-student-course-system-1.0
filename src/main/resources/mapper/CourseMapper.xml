@@ -8,7 +8,7 @@
 
         <!--  N+1 -->
         <!-- <association property="clazz" column="classid" javaType="clazz" select="cn.edu.guet.mapper.ClassMapper.getClazzById"/> -->
-        <!-- 执行连接查询（两个表连接） -->
+        <!-- 执行连接查询 （两个表连接） -->
         <association property="teacher" column="teacherid">
             <id column="teacherid" property="teacherId"/>
             <result column="teachername" property="teacherName"/>

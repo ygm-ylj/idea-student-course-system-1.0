@@ -33,7 +33,7 @@ public class CourseController {
     public Result getCourse(HttpServletRequest request){
         //String studentId = (String) httpSession.getAttribute("username");//从http中获得username并赋值给studentId
         String studentId = authentication.getUsername(request, "ViewSelected");
-        System.out.println("AAAAAAAAAAAAAAABBBBBBBBBBBBB取到的当前用户："+studentId);
+        System.out.println("AAAAAAAAAAAAABBBBBBBBBBB取到的当前用户："+studentId);
         Result result=new Result();
         List<Course> cou=courseService.getCourse(studentId);//用studentId从courseService中获得getCourse并赋值给cou集合
         System.out.println(cou);
