@@ -19,63 +19,63 @@ public class UserController {
     @Autowired
     IUserService userService;
     Result result=new Result();
-    //»ñÈ¡Ä³¸öÑ§ÉúĞÅÏ¢
+    //è·å–æŸä¸ªå­¦ç”Ÿä¿¡æ¯
     @RequestMapping(value = "/getStudentById", method = RequestMethod.GET)
     public Result getStudentById(String id){
         if (id == null) {
-            return result.fail("ÇëÊäÈëid");
+            return result.fail("è¯·è¾“å…¥id");
         }
         Student stu=userService.getStudentById(id);
         if (stu == null) {
-            return result.fail("ÎŞ¸ÃÑ§Éú");
+            return result.fail("æ— è¯¥å­¦ç”Ÿ");
         }
         return result.succ(stu);
     }
 
-    //Í¨¹ıÑ§ÔºÃû²éÕÒÑ§Éú
+    //é€šè¿‡å­¦é™¢åæŸ¥æ‰¾å­¦ç”Ÿ
     @RequestMapping(value = "/viewStudentBySchoolName", method = RequestMethod.GET)
     public Result viewStudentBySchoolName(String schoolName){
         List<Student> students=userService.viewStudentBySchoolName(schoolName);
         if (students == null) {
-            return result.fail("Ã»ÓĞÑ§Éú");
+            return result.fail("æ²¡æœ‰å­¦ç”Ÿ");
         }
         return result.succ(students);
     }
 
-    //»ñÈ¡È«²¿Ñ§ÉúĞÅÏ¢
+    //è·å–å…¨éƒ¨å­¦ç”Ÿä¿¡æ¯
     @RequestMapping(value = "/getAllStudent", method = RequestMethod.GET)
     public Result getAllStudent(){
         List<Student> studentList=userService.getAllStudent();
         if (studentList == null) {
-            return result.fail("Ã»ÓĞÑ§Éú");
+            return result.fail("æ²¡æœ‰å­¦ç”Ÿ");
         }
         return result.succ(studentList);
     }
 
-    //»ñÈ¡Ä³¸öÀÏÊ¦ĞÅÏ¢
+    //è·å–æŸä¸ªè€å¸ˆä¿¡æ¯
     @RequestMapping(value = "/getTeacherById", method = RequestMethod.GET)
     public Result getTeacherById(String id){
         if (id == null) {
-            return result.fail("ÇëÊäÈëid");
+            return result.fail("è¯·è¾“å…¥id");
         }
         Teacher tea=userService.getTeacherById(id);
         if (tea == null) {
-            return result.fail("ÎŞ¸ÃÀÏÊ¦");
+            return result.fail("æ— è¯¥è€å¸ˆ");
         }
         return result.succ(tea);
     }
 
-    //»ñÈ¡È«²¿ÀÏÊ¦ĞÅÏ¢
+    //è·å–å…¨éƒ¨è€å¸ˆä¿¡æ¯
     @RequestMapping(value = "/getAllTeacher", method = RequestMethod.GET)
     public Result getAllTeacher(){
         List<Teacher> teacherList=userService.getAllTeacher();
         if (teacherList == null) {
-            return result.fail("Ã»ÓĞÀÏÊ¦");
+            return result.fail("æ²¡æœ‰è€å¸ˆ");
         }
         return result.succ(teacherList);
     }
 
-    //Ìí¼ÓÑ§Éú
+    //æ·»åŠ å­¦ç”Ÿ
     @RequestMapping(value = "/addStudent", method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public Result addStudent(String classId, String studentId, String studentName){
         System.out.println("1111111"+classId);
@@ -88,27 +88,27 @@ public class UserController {
         List<Clazz> allClazzId=userService.getAllClazzId();
         try {
             userService.addStudent(stu);
-            return result.succ(200,"Ìí¼ÓÑ§Éú³É¹¦",null);
+            return result.succ(200,"æ·»åŠ å­¦ç”ŸæˆåŠŸ",null);
         } catch (Exception e) {
             e.printStackTrace();
             if(allStudentId.contains(studentId)){
-                return result.fail("¸ÃÑ§ÉúÒÑ´æÔÚ");
+                return result.fail("è¯¥å­¦ç”Ÿå·²å­˜åœ¨");
             }else if(!allClazzId.contains(classId)){
-                return result.fail("¸Ã°à¼¶²»´æÔÚ");
+                return result.fail("è¯¥ç­çº§ä¸å­˜åœ¨");
             }
 
         }
-            return  null;
+        return  null;
     }
 
-    //É¾³ıÑ§Éú
+    //åˆ é™¤å­¦ç”Ÿ
     @RequestMapping(value = "/deleteStudent", method = RequestMethod.GET)
     public Result deleteStudent(String id){
         userService.deleteStudent(id);
-        return result.succ(200,"É¾³ı³É¹¦",null);
+        return result.succ(200,"åˆ é™¤æˆåŠŸ",null);
     }
 
-    //Ìí¼ÓÀÏÊ¦
+    //æ·»åŠ è€å¸ˆ
     @RequestMapping(value = "/addTeacher", method = RequestMethod.POST)
     public Result addTeacher(String teacherId, String teacherName, String schoolId){
         Teacher teacher=new Teacher();
@@ -120,27 +120,27 @@ public class UserController {
         List<School> allSchoolId=userService.getAllSchoolId();
         try {
             userService.addTeacher(teacher);
-            return result.succ(200, "Ìí¼ÓÀÏÊ¦³É¹¦", null);
+            return result.succ(200, "æ·»åŠ è€å¸ˆæˆåŠŸ", null);
         } catch (Exception e) {
             e.printStackTrace();
             if(allTeacherId.contains(teacherId)){
-                return result.fail("ÀÏÊ¦ÒÑ´æÔÚ");
+                return result.fail("è€å¸ˆå·²å­˜åœ¨");
             }else if(!allSchoolId.contains(schoolId)){
-                return  result.fail("¸Ã×¨Òµ²»´æÔÚ");
+                return  result.fail("è¯¥ä¸“ä¸šä¸å­˜åœ¨");
             }
 
         }
         return null;
     }
 
-    //É¾³ıÀÏÊ¦
+    //åˆ é™¤è€å¸ˆ
     @RequestMapping(value = "/deleteTeacher", method = RequestMethod.GET)
     public Result deleteTeacher(String teacherId){
         if(teacherId==null){
-            return result.fail("É¾³ıÀÏÊ¦Ê§°Ü");
+            return result.fail("åˆ é™¤è€å¸ˆå¤±è´¥");
         }else{
             userService.deleteTeacher(teacherId);
-            return result.succ(200,"É¾³ıÀÏÊ¦³É¹¦",null);
+            return result.succ(200,"åˆ é™¤è€å¸ˆæˆåŠŸ",null);
         }
     }
 

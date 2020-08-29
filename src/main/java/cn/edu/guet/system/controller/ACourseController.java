@@ -89,7 +89,7 @@ public class ACourseController {
     }
 
     //É¾³ý¿Î³Ì
-    @RequestMapping(value = "/deleteCourse",method = RequestMethod.GET)
+    @RequestMapping(value = "/aDeleteCourse",method = RequestMethod.GET)
     public Result deleteCourse(String courseId){
         System.out.println(courseId);
         try {
