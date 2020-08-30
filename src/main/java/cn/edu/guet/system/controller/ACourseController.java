@@ -5,12 +5,14 @@ import cn.edu.guet.system.model.Major;
 import cn.edu.guet.system.model.Teacher;
 import cn.edu.guet.system.service.IACourseService;
 import cn.edu.guet.system.service.IUserService;
+import cn.edu.guet.system.service.impl.AuthenticationImpl;
 import cn.edu.guet.system.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -20,48 +22,51 @@ public class ACourseController {
     Result result=new Result();
     @Autowired
     IUserService userService;
-    //»ñÈ¡È«²¿¿Î³Ì
+    @Autowired
+    AuthenticationImpl authentication;
+    //è·å–å…¨éƒ¨è¯¾ç¨‹
     @RequestMapping(value = "/getAllCourse",method = RequestMethod.GET)
     public Result getAllCourse(){
         List<Course> allCourse=courseService.getAllCourse();
         if(allCourse==null){
-            return result.fail("²éÑ¯¿Î³ÌÊ§°Ü");
+            return result.fail("æŸ¥è¯¢è¯¾ç¨‹å¤±è´¥");
         }else{
-            return result.succ(200,"²éÑ¯¿Î³Ì³É¹¦",allCourse);
+            return result.succ(200,"æŸ¥è¯¢è¯¾ç¨‹æˆåŠŸ",allCourse);
         }
     }
 
-    //Í¨¹ıÀÏÊ¦ĞÕÃû²éÕÒ¿Î³Ì
+    //é€šè¿‡è€å¸ˆå§“åæŸ¥æ‰¾è¯¾ç¨‹
     @RequestMapping(value = "/viewCourseByTeacherName",method = RequestMethod.GET)
     public Result viewCourseByTeacherName(String teacherName){
         System.out.println(teacherName);
         List<Course> teacherCourses=courseService.viewCourseByTeacherName(teacherName);
         System.out.println(teacherCourses);
         if (teacherCourses == null) {
-            return result.fail("²»´æÔÚ¸ÃÀÏÊ¦");
+            return result.fail("ä¸å­˜åœ¨è¯¥è€å¸ˆ");
         }
         else{
-                return result.succ(200, "²éÑ¯¿Î³Ì³É¹¦", teacherCourses);
+            return result.succ(200, "æŸ¥è¯¢è¯¾ç¨‹æˆåŠŸ", teacherCourses);
         }
     }
 
-    //Í¨¹ı¿Î³ÌÃû³Æ²éÕÒ¿Î³Ì
+    //é€šè¿‡è¯¾ç¨‹åç§°æŸ¥æ‰¾è¯¾ç¨‹
     @RequestMapping(value = "/viewCourseByCourseName",method = RequestMethod.GET)
     public Result viewCourseByCourseName(String courseName){
         System.out.println(courseName);
         List<Course> viewCourses=courseService.viewCourseByCourseName(courseName);
         System.out.println(viewCourses);
         if (viewCourses == null) {
-            return result.fail("²»´æÔÚ¸Ã¿Î³Ì");
+            return result.fail("ä¸å­˜åœ¨è¯¥è¯¾ç¨‹");
         }
         else{
-            return result.succ(200, "²éÑ¯¿Î³Ì³É¹¦", viewCourses);
+            return result.succ(200, "æŸ¥è¯¢è¯¾ç¨‹æˆåŠŸ", viewCourses);
         }
     }
 
-    //Ìí¼Ó¿Î³Ì
+    //æ·»åŠ è¯¾ç¨‹
     @RequestMapping(value = "/addCourse",method = RequestMethod.POST)
-    public Result addCourse(String courseId,String courseName,String teacherId,String majorId) {
+    public Result addCourse(String courseId, String courseName, String teacherId, String majorId, HttpServletRequest request) {
+        authentication.getUsername(request,"AddCourse");
         Course addCourse = new Course();
         List allCourseId=courseService.getAllCourseId();
         List allTeacherId=userService.getAllTeacherId();
@@ -74,34 +79,35 @@ public class ACourseController {
             addCourse.setTeacher(teacher);
             addCourse.setMajor(major);
             courseService.addCourse(addCourse);
-            return result.succ(200, "Ìí¼Ó¿Î³Ì³É¹¦", null);
+            return result.succ(200, "æ·»åŠ è¯¾ç¨‹æˆåŠŸ", null);
         }catch (Exception e){
             e.printStackTrace();
             if (allCourseId.contains(courseId)){
-                return result.fail("¸Ã¿Î³ÌÒÑ´æÔÚ");
+                return result.fail("è¯¥è¯¾ç¨‹å·²å­˜åœ¨");
             }else if (!allTeacherId.contains(teacherId)){
-                return result.fail("¸ÃÀÏÊ¦²»´æÔÚ");
+                return result.fail("è¯¥è€å¸ˆä¸å­˜åœ¨");
             }else if (!allMajorId.contains(majorId)){
-                return result.fail("¸Ã×¨Òµ²»´æÔÚ");
+                return result.fail("è¯¥ä¸“ä¸šä¸å­˜åœ¨");
             }
         }
         return null;
     }
 
-    //É¾³ı¿Î³Ì
+    //åˆ é™¤è¯¾ç¨‹
     @RequestMapping(value = "/aDeleteCourse",method = RequestMethod.GET)
-    public Result deleteCourse(String courseId){
+    public Result deleteCourse(String courseId,HttpServletRequest request){
+        authentication.getUsername(request,"FindCourse");
         System.out.println(courseId);
         try {
             courseService.deleteCourse(courseId);
-            return result.succ(200,"É¾³ı¿Î³Ì³É¹¦",null);
+            return result.succ(200,"åˆ é™¤è¯¾ç¨‹æˆåŠŸ",null);
         } catch (Exception e) {
             e.printStackTrace();
-            return Result.fail("¿Î³ÌID²»´æÔÚ»ò´æÔÚ×Ó¼ÇÂ¼");
+            return Result.fail("è¯¾ç¨‹IDä¸å­˜åœ¨æˆ–å­˜åœ¨å­è®°å½•");
         }
     }
 
-    //¸üĞÂ¿Î³Ì
+    //æ›´æ–°è¯¾ç¨‹
     @RequestMapping(value = "/updateCourse",method = RequestMethod.POST)
     public Result updateCourse(String courseId,String courseName,String teacherId,String majorId){
         Course updateCourse=courseService.getCourseByCourseId(courseId);
@@ -112,9 +118,9 @@ public class ACourseController {
         updateCourse.setMajor(major);
         courseService.updateCourse(updateCourse);
         if(updateCourse==null){
-            return result.fail("¸üĞÂ¿Î³ÌÊ§°Ü");
+            return result.fail("æ›´æ–°è¯¾ç¨‹å¤±è´¥");
         }else{
-            return result.succ(200,"¸üĞÂ¿Î³Ì³É¹¦",null);
+            return result.succ(200,"æ›´æ–°è¯¾ç¨‹æˆåŠŸ",null);
         }
     }
 }
